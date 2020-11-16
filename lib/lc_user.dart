@@ -413,11 +413,14 @@ class LCUser extends LCObject {
     }
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userData = prefs.getString(CurrentUserKey);
-      _LCObjectData objectData = _LCObjectData.decode(jsonDecode(userData));
-      _currentUser = LCUser._fromObjectData(objectData);
+      if (prefs.containsKey(CurrentUserKey)) {
+        String userData = prefs.getString(CurrentUserKey);
+        _LCObjectData objectData = _LCObjectData.decode(jsonDecode(userData));
+        _currentUser = LCUser._fromObjectData(objectData);
+      }
     } on Error catch (e) {
       LCLogger.error(e.toString());
+      _currentUser = null;
     }
     return _currentUser;
   }
